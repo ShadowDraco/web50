@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" type="text/css" href="styles.css" /> 
+        <title>Google Search</title>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="script.js" defer></script>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:wght@700&display=swap" rel="stylesheet">
+    </head>
+    <body >
+        <div class="nav-bar">
+            <a href="/index.html">Google</a>
+        </div>
+        <div class="google-logo-small">
+            <p class="rainbow-letters">
+                <span>G</span>
+                <span>o</span>
+                <span>o</span>
+                <span>g</span>
+                <span>l</span>
+                <span>e</span>
+            </p>
+            <p class="google-advanced-text">Advanced</p>
+        </div>
+        
+        <div class="adv-search-box">
+            <div class="adv-top-text">
+                <p></p>
+                <p></p>
+            </div>
+            <form action="https://www.google.com/search" class="adv-form">
+              
+                <div class="adv-form-row">
+                    <p>All these words:</p>
+                    <input type="text" name="as_q" class="adv-search-bar">
+                    <p class='thin'>Type the important words:  tricolor rat terrier</p>
+                </div>
+                <div class="adv-form-row">
+                    <p>This exact word or phrase:</p>
+                    <input type="text" name="as_epq" class="adv-search-bar">
+                    <p class='thin'>Put exact words in quotes:  "rat terrier"</p>
+                </div>
+                <div class="adv-form-row">
+                    <p>Any of these words:</p>
+                    <input type="text" name="as_oq" class="adv-search-bar">
+                    <p class='thin'>Type OR between all the words you want:  miniature OR standard</p>
+                </div>
+                <div class="adv-form-row">
+                    <p>None of these words:</p>
+                    <input type="text" name="as_eq" class="adv-search-bar">
+                    <p class='thin'>Put a minus sign just before words you don't want:  -rodent, -"Jack Russell"</p>
+                </div>
+                   
+                <button type="submit" class="adv-search-button">Advanced Search</button>
+            </form>
+            
+        </div>
+    
+    </body>
+</html>
