@@ -14,8 +14,8 @@
     </head>
     <body >
         <div class="nav-bar">
-            <a href="/images.html">Images</a>
-            <a href="/advanced.html">Advanced</a>
+            <a href="/projects/2020/x/search/index.html">Google</a>
+            
         </div>
         <div class="google-logo">
             <p class="rainbow-letters">
@@ -26,17 +26,18 @@
                 <span>l</span>
                 <span>e</span>
             </p>
-           
+            <p class="google-images-text">Images</p>
         </div>
+        
         <div class="search-box">
             <form action="https://www.google.com/search">
                 <div class="input-wrapper">
                     <input type="text" name="q" id="search-bar">
+                    <input type="text" name="source" value="hp" hidden>
+                    <input type="text" name="sclient" value="img" hidden>
+                    <input type="text" name="udm" value="2" hidden>
                     <button type="submit" class="bg-white"><span class="ico ico-mglass"></span></button>
                 </div>
-                <br>
-                <button type="submit">Search</button>
-                <button onclick="imFeelingLucky()" id="imfeelingluckyButton" name="btnI">I'm Feeling Lucky</button>
             </form>
             
         </div>
