@@ -1,0 +1,21 @@
+{% extends "tasks/layout.html" %}
+
+{% block body %}
+<div class="navbar">
+    <a href="{% url 'tasks:add' %}">Add New</a>
+</div>
+{% if name %}
+<h1>{{name}}'s Tasks</h1>
+{% endif %}
+
+{% if not tasks %}
+<h1>Create some new Tasks!</h1>
+{% endif %}
+
+
+<ul>
+    {% for task in tasks %}
+        <li>{{task}}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
