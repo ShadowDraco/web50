@@ -1,0 +1,25 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Edit Entry
+{% endblock %}
+
+{% block body%}
+<h1>Edit Entry</h1>
+
+
+    <form action="/edit/{{title}}" method="post" id="editForm" id="editForm">
+        {% csrf_token %}
+        <label>Title:</label>
+        <input type="text" name="title" id="title" value={{title}} hidden>
+        <!-- One input is for the server-side form requirement, and the other is for the user to see -->
+        <!-- Neither input changes on the server because this is Edit, not ADD-->
+        <input type="text" name="title" id="title" value={{title}} disabled>
+        <br>
+        <label>Content (Markdown):</label>
+        <br>
+        <textarea name="content" id="content" style="max-height: 300px" form="editForm">{{content}}</textarea>
+        <br>
+        <input type="submit" value="Save">
+    </form>
+{% endblock %}

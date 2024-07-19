@@ -12,8 +12,12 @@ h1 {
     padding-top: 20px;
 }
 
+.formContent {
+    height: 300px;
+}
+
 textarea {
-    height: 90vh;
+    height: 30vh;
     width: 80%;
 }
 

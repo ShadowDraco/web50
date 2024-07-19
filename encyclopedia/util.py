@@ -3,17 +3,9 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 
 from markdown2 import Markdown
-from html.parser import HTMLParser
 
 #### I made all MD files lowercased because my filesystem is case-sensitive
 ### Is there a better way or is this an acceptable answer? 
-
-class MyHTMLParser(HTMLParser):
-    text = ""
-    def handle_data(self, data):
-        self.text += data
-
-parser = MyHTMLParser()
 
 def list_entries():
     """
@@ -49,13 +41,21 @@ def get_entry(title):
     try:
         f = default_storage.open(f"entries/{title.lower()}.md")
         mdText = f.read().decode("utf-8")
+        # Convert given markdown to HMTML then return it
         convertedHtml = Markdown().convert(mdText)
         return convertedHtml
-        #parser.feed(convertedHtml)
-        
-        #return parser.text
         
     except FileNotFoundError:
         return None
         
-   
+def get_entry_editable(title):
+    """
+    Retrieves an encyclopedia entry by its title. If no such
+    entry exists, the function returns None.
+    """
+    try:
+        f = default_storage.open(f"entries/{title.lower()}.md")
+        return f.read().decode("utf-8")
+        
+    except FileNotFoundError:
+        return None   

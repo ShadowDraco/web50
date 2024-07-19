@@ -6,14 +6,17 @@
 
 {% block body%}
 <h1>New Entry</h1>
-    <form>
+    <form action="/new" method="POST">
+        {% csrf_token %}
         <label>Title:</label>
         <input type="text" name="title" id="title">
         <br>
         <label>Content (Markdown):</label>
         <br>
-        <textarea name="content" id="content"></textarea>
+        <textarea name="content" id="content" style="max-height: 300px"></textarea>
         <br>
-        <input type="submit">
+        <input type="submit" value="Create">
     </form>
+
+    <p>{{error}}</p>
 {% endblock %}
