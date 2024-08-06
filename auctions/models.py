@@ -30,6 +30,7 @@ class Bid(models.Model):
     amount = models.FloatField()
     bidder = models.ForeignKey(User, related_name="bids", on_delete=models.CASCADE,)
     listing = models.ForeignKey(Listing, verbose_name="Listing the bid was placed on", on_delete=models.CASCADE)
+    
     def __str__(self):
         return f"Bid: {self.amount} for ${self.amount}"
 
