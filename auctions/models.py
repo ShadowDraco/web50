@@ -8,8 +8,7 @@ class User(AbstractUser):
 
 
 class Category(models.Model):
-    categories = models.TextChoices("Category", "Fashion Toys Gifts Computers Decorations Cars Misc. Other")
-    title = models.CharField(blank=True, choices=categories, max_length=20)
+    title = models.CharField(max_length=25)
     description = models.TextField(max_length=100)
    
     def __str__(self):
@@ -21,7 +20,7 @@ class Listing(models.Model):
     starting_bid = models.FloatField(max_length=10)
     date = models.DateField(auto_now=True)
     image = models.ImageField(blank=True)
-    category = models.ForeignKey(Category, verbose_name="Shopping category the listing was placed on", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Listing: {self.title} for ${self.starting_bid}"
