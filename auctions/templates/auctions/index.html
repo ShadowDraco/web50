@@ -1,7 +1,38 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %} {% load static %} {% block body %}
+<h2>Active Listings</h2>
+{% if listings %}
+<ol class="list-group list-group-flush">
+  {% for listing in listings %}
+  <li class="list-group-item">
+    <div class="container d-flex">
+      <a
+        href="/listings/{{listing.id}}"
+        class="link-underline-opacity-0 link-underline-opacity-0-hover"
+      >
+        <img
+          src="{{listing.image}}"
+          width="350px"
+          height="350px"
+          alt="Listing Image"
+        />
+      </a>
+      <div class="mx-5 d-flex flex-column justfiy-content-around">
+        <a
+          href="/listings/{{listing.id}}"
+          class="link-underline-opacity-0 link-underline-opacity-0-hover"
+        >
+          <h3 class="text-primary">{{listing.title}}</h3>
+        </a>
+        <h5 class="flex-fill">Price: $ {{listing.starting_bid}}</h5>
+        <h4 class="flex-fill">{{listing.description}}</h4>
+        <h6 class="muted">Created: {{listing.date}}</h6>
+      </div>
+    </div>
+  </li>
+  {% endfor %}
+</ol>
+{% else %}
 
-{% block body %}
-    <h2>Active Listings</h2>
-
-    TODO
-{% endblock %}
+<h1>There are no listings! ;(</h1>
+<a href="create-listing"><h3>Create a listing now!</h3></a>
+{% endif %} {% endblock %}

@@ -4,17 +4,58 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Listing, Bid
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = []
+    try:
+        listings = Listing.objects.all()
+    except LookupError:
+        listings = None
+
+    return render(request, "auctions/index.html", {
+        "listings": listings
+    })
+
+def listings(request, id):
+
+    if request.method == "POST" and request.user:
+        # add selected listing to user's watchlist relation
+        listing = Listing.objects.get(id=id)
+        user = request.user
+        user.watchlist.add(listing)
+        user.save()
+    else: 
+        # send listing data
+        listing = None
+        try:
+            listing = Listing.objects.get(id=id)    
+        except LookupError:
+            listing = None
+
+    listing_bids = Bid.objects.all().filter(listing=listing).order_by("amount")
+    print(listing_bids)
+    highest_bid = 10
+    return render(request, "auctions/listings.html", {
+        "listing": listing,
+        "highest_bid": highest_bid,
+        "bids": len(listing_bids)
+    })
 
 def create_listing(request):
     return render(request, "auctions/create_listing.html")
 
 def watchlist(request):
-    return render(request, "auctions/watchlist.html")
+    user_watchlist = []
+    try:
+        user_watchlist = request.user.watchlist.all()
+    except:
+        user_watchlist = None
+    
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": user_watchlist
+    })
 
 def categories(request):
     return render(request, "auctions/categories.html")

@@ -1,0 +1,40 @@
+{% extends "auctions/layout.html" %} {% block body %} {% if listing %}
+<h2>Listing: {{listing.title}}</h2>
+<div class="">
+  <form action="/listings/{{listing.id}}" method="POST">
+    {% csrf_token %}
+    <button class="" type="submit">Watchlist</button>
+  </form>
+  <div class="d-flex mt-5">
+    <img
+      src="{{listing.image}}"
+      width="350px"
+      height="350px"
+      alt="Listing Image"
+    />
+
+    <div class="mx-5 d-flex flex-column justfiy-content-around">
+      <h3 class="text-primary">{{listing.title}}</h3>
+
+      <h5 class="flex-fill">Price: $ {{listing.starting_bid}}</h5>
+      <h4 class="flex-fill">{{listing.description}}</h4>
+      <h4>Details: </h4>
+      <h6>Listed By: <a href="/users/{{listing.lister.id}}">{{listing.lister}}</a></h6>
+      <h6 class="muted">Created: {{listing.date}}</h6>
+    </div>
+
+    <div class="container">
+        <form action="/listings/{{listing.id}}" method="POST">
+            <label for="bid">{{bids}} bid(s) so far.</label>
+            <input type="number" name="bid" value={{highest_bid}}>
+        </form>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<h1>That listing does not exist!</h1>
+<h3><a href="/">Return to listings</a></h3>
+
+{% endif %} {% endblock %}
