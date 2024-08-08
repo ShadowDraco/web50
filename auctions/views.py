@@ -3,55 +3,91 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
+import datetime
 from .models import User, Listing, Bid
+from .lib import *
 
 
 def index(request):
-    listings = []
-    try:
-        listings = Listing.objects.all()
-    except LookupError:
-        listings = None
-
+    listings = getAllListings()
+    
     return render(request, "auctions/index.html", {
         "listings": listings
     })
 
 def listings(request, id):
 
-    if request.method == "POST" and request.user:
-        # add selected listing to user's watchlist relation
-        listing = Listing.objects.get(id=id)
-        user = request.user
-        user.watchlist.add(listing)
-        user.save()
-    else: 
-        # send listing data
-        listing = None
-        try:
-            listing = Listing.objects.get(id=id)    
-        except LookupError:
-            listing = None
+    # Create reusable render data
+    listing_data = getListingData(id)
 
-    listing_bids = Bid.objects.all().filter(listing=listing).order_by("amount")
-    print(listing_bids)
-    highest_bid = 10
-    return render(request, "auctions/listings.html", {
-        "listing": listing,
-        "highest_bid": highest_bid,
-        "bids": len(listing_bids)
-    })
+    # Check for form submission
+    if request.method == "POST" and request.user:
+        # if not bidding, do watchlist logic
+        bid_amount = request.POST["bid"]
+        if not bid_amount:
+            try:
+                listing = listing_data["listing"]
+                user = request.user
+                user.watchlist.add(listing)
+                user.save()
+            except:
+                listing_data["message"] = f"Listing or User may not exist: Error" 
+        # Do bid logic
+        else:
+            try:
+                amount = float(bid_amount)
+                if amount > listing_data["highest_bid"]:
+                    newBid = Bid(amount=amount, bidder=request.user, listing=listing_data["listing"])
+                    newBid.save()
+                    listing_data = getListingData(id)
+                    listing_data["message"] = "Success!" 
+                else:
+                    listing_data["message"] = "Bid too low!" 
+            except ValueError:
+                listing_data["message"] = f"Bid could not be completed {ValueError}" 
+   
+    return render(request, "auctions/listings.html", listing_data)
 
 def create_listing(request):
-    return render(request, "auctions/create_listing.html")
+
+    form = ListingForm(request.POST)
+    categories = getAllCategories()
+   
+    if request.method == "POST":
+        
+        try:
+            if form.is_valid():
+                user = User.objects.get(id=request.user.id)
+                title = form.cleaned_data["title"]
+                description = form.cleaned_data["description"]
+                image = form.cleaned_data["image"]
+                starting_bid = form.cleaned_data["starting_bid"]
+                category = Category.objects.get(id=form.cleaned_data["category"])
+                newListing = Listing(lister=user, title=title, description=description, image=image, starting_bid=starting_bid, category=category)
+                newListing.save()
+                
+                return render(request, "auctions/listings.html", {
+                    "listing": newListing,
+                    "highest_bid": newListing.starting_bid,
+                    "listing_bids": 0
+                })
+            else:
+                return render(request, "auctions/create_listing.html", {
+                 "categories": categories,"message": "There is something wrong with your listing."
+            })
+
+        except:
+            return render(request, "auctions/create_listing.html", {
+                "categories": categories, "message": "There is something wrong with your listing."
+            })
+        
+
+    return render(request, "auctions/create_listing.html", {
+        "categories": categories, "message": ""
+    })
 
 def watchlist(request):
-    user_watchlist = []
-    try:
-        user_watchlist = request.user.watchlist.all()
-    except:
-        user_watchlist = None
+    user_watchlist = getUserWatchlist()
     
     return render(request, "auctions/watchlist.html", {
         "watchlist": user_watchlist
