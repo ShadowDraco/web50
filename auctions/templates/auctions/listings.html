@@ -35,7 +35,7 @@
         <h4>Details: </h4>
         {% if user.username == listing.lister.username %}
         <div class="container ">
-          <h6>Listed By: <a href="/users/{{listing.lister.id}}">YOU</a></h6>
+          <h6>Listed By: <a href="/user/{{listing.lister.id}}">YOU</a></h6>
           <h6 class="muted">Created: {{listing.date}}</h6>
 
           <h6>Top Bidder: {{top_bidder}} </h6>
@@ -45,7 +45,7 @@
           </form>
         </div>
         {% else %}
-          <h6>Listed By: <a href="/users/{{listing.lister.id}}">{{listing.lister}}</a></h6>
+          <h6>Listed By: <a href="/user/{{listing.lister.id}}">{{listing.lister}}</a></h6>
           <h6 class="muted">Created: {{listing.date}}</h6>
         {% endif %}
 

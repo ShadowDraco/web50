@@ -11,7 +11,7 @@ class ListingForm(forms.Form):
 def getAllListings():
     listings = []
     try:
-        listings = Listing.objects.all().filter(active=True)
+        listings = Listing.objects.filter(active=True)
     except LookupError:
         listings = None
     
@@ -38,7 +38,7 @@ def getUserWatchlist(user):
 def getListingData(listing_id):
     try:
         listing = Listing.objects.get(id=listing_id)    
-        listing_bids = Bid.objects.all().filter(listing=listing).order_by("-amount").values()
+        listing_bids = Bid.objects.filter(listing=listing).order_by("-amount").values()
         top_bidder = getTopBidder(listing_bids, True)
 
         if listing_bids.first():

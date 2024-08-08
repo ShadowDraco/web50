@@ -50,13 +50,14 @@ def user(request, id):
         user = User.objects.get(id=id)
     
         if user == request.user:
-            closed_listings = Listing.objects.all().filter(lister=request.user, closed=True)
-            won_listings = Listing.objects.all().filter(winner=request.user)
+            closed_listings = Listing.objects.filter(lister=request.user, closed=True)
+            won_listings = Listing.objects.filter(winner=request.user)
 
             user_data = { "closed_listings": closed_listings, "won_listings": won_listings}
             return render(request, "auctions/user.html", user_data)
         else: 
-            listings = Listing.objects.all().filter(lister=user)
+            listings = Listing.objects.filter(lister=user, closed=False)
+            
             return render(request, "auctions/user.html", { "listings": listings, "username": user.username})
     except: 
         return render(request, "auctions/user.html", {"username": "User does not exist"})
