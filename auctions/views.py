@@ -24,6 +24,11 @@ def listings(request, id):
     # Check for form submission
     if request.method == "POST" and request.user.is_authenticated:
         # Do bid logic
+
+      if listing_data["lister"] == request.user:
+        listing_data["message"] = "You cannot bid on your own listing!"
+        return render(request, "auctions/listings.html", listing_data)
+
         try:
             bid_amount = request.POST["bid"]
             amount = float(bid_amount)
@@ -38,6 +43,24 @@ def listings(request, id):
                 listing_data["message"] = f"Bid could not be completed {ValueError}" 
    
     return render(request, "auctions/listings.html", listing_data)
+
+@login_required()
+def user(request, id):
+    try:
+        user = User.objects.get(id=id)
+    
+        if user == request.user:
+            closed_listings = Listing.objects.all().filter(lister=request.user, closed=True)
+            won_listings = Listing.objects.all().filter(winner=request.user)
+
+            user_data = { "closed_listings": closed_listings, "won_listings": won_listings}
+            return render(request, "auctions/user.html", user_data)
+        else: 
+            listings = Listing.objects.all().filter(lister=user)
+            return render(request, "auctions/user.html", { "listings": listings, "username": user.username})
+    except: 
+        return render(request, "auctions/user.html", {"username": "User does not exist"})
+
 
 @login_required()
 def close_listing(request, id):

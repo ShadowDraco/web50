@@ -1,0 +1,132 @@
+{% extends "auctions/layout.html" %} 
+{% block body %}
+
+<!-- PAGE FOR VIEWING OTHER USERS -->
+
+{% if listings and username %}
+
+<h2>{{username}}'s Listings</h2>
+<ol class="list-group list-group-flush">
+  {% for listing in listings %}
+  <li class="list-group-item">
+    <div class="container d-flex">
+      <a
+        href="/listings/{{listing.id}}"
+        class="link-underline-opacity-0 link-underline-opacity-0-hover"
+      >
+        <img
+          src="{{listing.image}}"
+          width="350px"
+          height="350px"
+          alt="Listing Image"
+        />
+      </a>
+      <div class="mx-5 d-flex flex-column justfiy-content-around">
+        <a
+          href="/listings/{{listing.id}}"
+          class="link-underline-opacity-0 link-underline-opacity-0-hover"
+        >
+          <h3 class="text-primary">{{listing.title}}</h3>
+        </a>
+        <h5 class="flex-fill">Price: $ {{listing.starting_bid}}</h5>
+        <h4 class="flex-fill">{{listing.description}}</h4>
+        <h6>Listed By: <a href="/users/{{listing.lister.id}}">{{listing.lister}}</a></h6>
+        <h6 class="muted">Created: {{listing.date}}</h6>
+      
+    </div>
+  </li>
+  {% endfor %} 
+  {% else %}
+  <h1>{{username}}</h1>
+{% endif %}
+
+
+<!-- PAGE FOR VIEWING YOUR OWN ACTIVITY -->
+<!-- WON LISTINGS -->
+<div class="container-fluid d-flex justify-content-between  flex-wrap">
+    <div class="">
+    {% if won_listings %}
+        <h2>WON Listings</h2>
+        <ol class="list-group list-group-flush">
+        {% for listing in won_listings %}
+        <li class="list-group-item">
+            <div class="container d-flex">
+            <a
+                href="/listings/{{listing.id}}"
+                class="link-underline-opacity-0 link-underline-opacity-0-hover"
+            >
+                <img
+                src="{{listing.image}}"
+                width="350px"
+                height="350px"
+                alt="Listing Image"
+                />
+            </a>
+            <div class="mx-5 d-flex flex-column justfiy-content-around">
+                <a
+                href="/listings/{{listing.id}}"
+                class="link-underline-opacity-0 link-underline-opacity-0-hover"
+                >
+                <h3 class="text-primary">{{listing.title}}</h3>
+                </a>
+                <h5 class="flex-fill">Price: $ {{listing.starting_bid}}</h5>
+                <h4 class="flex-fill">{{listing.description}}</h4>
+                <h6>Listed By: <a href="/users/{{listing.lister.id}}">{{listing.lister}}</a></h6>
+                <h6 class="muted">Created: {{listing.date}}</h6>
+            
+            </div>
+        </li>
+        {% endfor %}
+        </ol>
+    {% else %}
+        <div>
+            <h3>You have no previous winnings</h1>
+            <h3><a href="/">Find something to bid on!</a></h3>
+        </div>
+    {% endif %} 
+    </div>
+  
+    <!-- SOLD LISTINGS -->
+   <div>
+    {% if closed_listings %}
+        <h2>SOLD Listings</h2>
+        <ol class="list-group list-group-flush">
+        {% for listing in closed_listings %}
+        <li class="list-group-item">
+            <div class="container d-flex">
+            <a
+                href="/listings/{{listing.id}}"
+                class="link-underline-opacity-0 link-underline-opacity-0-hover"
+            >
+                <img
+                src="{{listing.image}}"
+                width="350px"
+                height="350px"
+                alt="Listing Image"
+                />
+            </a>
+            <div class="mx-5 d-flex flex-column justfiy-content-around">
+                <a
+                href="/listings/{{listing.id}}"
+                class="link-underline-opacity-0 link-underline-opacity-0-hover"
+                >
+                <h3 class="text-primary">{{listing.title}}</h3>
+                </a>
+                <h5 class="flex-fill">Price: $ {{listing.starting_bid}}</h5>
+                <h4 class="flex-fill">{{listing.description}}</h4>
+                <h6>Listed By: <a href="/users/{{listing.lister.id}}">{{listing.lister}}</a></h6>
+                <h6 class="muted">Created: {{listing.date}}</h6>
+            
+            </div>
+        </li>
+        {% endfor %} 
+        </ol>
+    {% else %}
+        <div>
+            <h3>You have no previous closed listings</h1>
+            <h3><a href="/create-listing">Sell something and get paid!</a></h3>
+        </div>
+    {% endif %} 
+    </div>
+</div>
+{% endblock %}

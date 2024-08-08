@@ -1,4 +1,5 @@
 {% extends "auctions/layout.html" %} {% block body %} {% if listing %}
+{% if listing.active %}
 <h2>Listing: {{listing.title}}</h2>
 <div class="">
   <form action="/watchlist/{{listing.id}}" method="POST">
@@ -12,7 +13,7 @@
       height="350px"
       alt="Listing Image"
     />
-    {% if listing.active %}
+   
       <div class="mx-5 d-flex flex-column justfiy-content-around form-group">
         <h3 class="text-primary">{{listing.title}}</h3>
 
@@ -49,8 +50,21 @@
         {% endif %}
 
       {% else %}
-        <h1>CLOSED</h1>
-        <h3>Winner: {{listing.winner.username}}</h1>
+        {% if listing.winner == user or listing.lister == user %}
+          <div class="mx-5">
+            <h1>{{listing.title}} ** CLOSED **</h1>
+            <img
+            src="{{listing.image}}"
+            width="350px"
+            height="350px"
+            alt="Listing Image"
+          />
+            <h1 class="text-success">Winner: {{listing.winner.username}}</h1>
+          </div>
+        {% else %}
+          <h1>Listing does not exist</h1>
+          <h3><a href="/">Please return to the active listings</a></h3>
+        {% endif %}
       {% endif %}
     </div>
 
