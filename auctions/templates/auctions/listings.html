@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %} {% block body %} {% if listing %}
 <h2>Listing: {{listing.title}}</h2>
 <div class="">
-  <form action="/listings/{{listing.id}}" method="POST">
+  <form action="/watchlist/{{listing.id}}" method="POST">
     {% csrf_token %}
     <button class="" type="submit">Watchlist</button>
   </form>

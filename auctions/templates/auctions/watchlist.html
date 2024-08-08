@@ -27,7 +27,14 @@
               </a>
               <h5 class="flex-fill">Price: $ {{listing.starting_bid}}</h5>
               <h4 class="flex-fill">{{listing.description}}</h4>
-              <h6 class="muted">Created: {{listing.date}}</h6>
+              <div class="container d-flex justify-content-between">
+                <h6 class="muted">Created: {{listing.date}}</h6>
+                <form action="/watchlist/{{listing.id}}/remove" method="POST">
+                  {% csrf_token %}
+                  <button type='submit' class="btn btn-danger">X</button>
+                </form>
+              </div>
+              
             </div>
           </div>
         </li>

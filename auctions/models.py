@@ -24,7 +24,7 @@ class Listing(models.Model):
     closed = models.BooleanField(default=False)
     winner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="winner", blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
+    
     def __str__(self):
         return f"Listing: {self.title} for ${self.starting_bid}"
 

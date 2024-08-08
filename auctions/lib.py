@@ -26,10 +26,10 @@ def getAllCategories():
     
     return categories
 
-def getUserWatchlist():
+def getUserWatchlist(user):
     user_watchlist = []
     try:
-        user_watchlist = request.user.watchlist.all()
+        user_watchlist = user.watchlist.all()
     except:
         user_watchlist = None
     
@@ -39,8 +39,10 @@ def getListingData(listing_id):
     try:
         listing = Listing.objects.get(id=listing_id)    
         listing_bids = Bid.objects.all().filter(listing=listing).order_by("-amount").values()
-        highest_bid = listing_bids.first()["amount"]
-      
+        if listing_bids.first():
+            highest_bid = listing_bids.first()["amount"]
+        else:
+            highest_bid = listing.starting_bid
     except LookupError:
         listing = None
 

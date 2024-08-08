@@ -22,31 +22,51 @@ def listings(request, id):
 
     # Check for form submission
     if request.method == "POST" and request.user:
-        # if not bidding, do watchlist logic
-        bid_amount = request.POST["bid"]
-        if not bid_amount:
-            try:
-                listing = listing_data["listing"]
-                user = request.user
-                user.watchlist.add(listing)
-                user.save()
-            except:
-                listing_data["message"] = f"Listing or User may not exist: Error" 
         # Do bid logic
-        else:
-            try:
-                amount = float(bid_amount)
-                if amount > listing_data["highest_bid"]:
-                    newBid = Bid(amount=amount, bidder=request.user, listing=listing_data["listing"])
-                    newBid.save()
-                    listing_data = getListingData(id)
-                    listing_data["message"] = "Success!" 
-                else:
-                    listing_data["message"] = "Bid too low!" 
-            except ValueError:
+        try:
+            bid_amount = request.POST["bid"]
+            amount = float(bid_amount)
+            if amount > listing_data["highest_bid"]:
+                newBid = Bid(amount=amount, bidder=request.user, listing=listing_data["listing"])
+                newBid.save()
+                listing_data = getListingData(id)
+                listing_data["message"] = "Success!" 
+            else:
+                listing_data["message"] = "Bid too low!" 
+        except ValueError:
                 listing_data["message"] = f"Bid could not be completed {ValueError}" 
    
     return render(request, "auctions/listings.html", listing_data)
+
+def add_to_watchlist(request, id):
+    
+    listing_data = getListingData(id)
+    if request.method == "POST" and request.user:
+        try:
+            listing = listing_data["listing"]
+            user = request.user
+            user.watchlist.add(listing)
+            user.save()
+        except:
+            listing_data["message"] = f"Listing or User may not exist: Error" 
+
+    return render(request, "auctions/listings.html", listing_data)
+
+def remove_from_watchlist(request, id):
+    listing_data = getListingData(id)
+    watchlist_data = []
+    message = ""
+    if request.method == "POST" and request.user:
+        try:
+            listing = listing_data["listing"]
+            user = request.user
+            user.watchlist.remove(listing)
+            user.save()
+            watchlist_data = getUserWatchlist(user)
+        except:
+           message = f"Listing or User may not exist: Error" 
+
+    return render(request, "auctions/watchlist.html", { "watchlist": watchlist_data, "message": message })
 
 def create_listing(request):
 
@@ -87,7 +107,7 @@ def create_listing(request):
     })
 
 def watchlist(request):
-    user_watchlist = getUserWatchlist()
+    user_watchlist = getUserWatchlist(request.user)
     
     return render(request, "auctions/watchlist.html", {
         "watchlist": user_watchlist

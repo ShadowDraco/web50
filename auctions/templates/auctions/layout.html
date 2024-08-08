@@ -21,7 +21,7 @@
       Not signed in. 
       {% endif %}
     </div>
-    <ul class="nav">
+    <ul class="nav align-items-center">
       <li class="nav-item">
         <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
       </li>
@@ -30,7 +30,7 @@
       </li>
       {% if user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
+        <a class="nav-link" href="{% url 'watchlist' %}">Watchlist <button class="btn btn-secondary btn-sm">{{ watchlist_length }}</button></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'create_listing' %}">Create Listing</a>
