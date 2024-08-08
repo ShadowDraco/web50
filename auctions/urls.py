@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("listings/<int:id>", views.listings, name="listings"),
+    path("listings/<int:id>/close", views.close_listing, name="close_listing"),
     path("listings/<int:id>/<str:bid_amount>", views.listings, name="bid"),
     path("create-listing", views.create_listing, name="create_listing"),
     path("watchlist", views.watchlist, name="watchlist"),

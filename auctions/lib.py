@@ -11,7 +11,7 @@ class ListingForm(forms.Form):
 def getAllListings():
     listings = []
     try:
-        listings = Listing.objects.all()
+        listings = Listing.objects.all().filter(active=True)
     except LookupError:
         listings = None
     
@@ -39,14 +39,32 @@ def getListingData(listing_id):
     try:
         listing = Listing.objects.get(id=listing_id)    
         listing_bids = Bid.objects.all().filter(listing=listing).order_by("-amount").values()
+        top_bidder = getTopBidder(listing_bids, True)
+
         if listing_bids.first():
             highest_bid = listing_bids.first()["amount"]
         else:
             highest_bid = listing.starting_bid
+
     except LookupError:
         listing = None
 
     return {  "listing": listing,
         "highest_bid": highest_bid,
-        "listing_bids": listing_bids, 
+        "listing_bids": listing_bids,
+        "top_bidder": top_bidder, 
         "message": "" }
+
+def getTopBidder(listing_bids, username=False):
+    user = "N/A"
+    try: 
+        user = User.objects.get(id=listing_bids.first()["bidder_id"])
+        if username:
+            return user.username
+        else: 
+            print('no username')
+            return user
+    except:
+        # exception will occur when there are no bids, Not an issue
+        return user
+  

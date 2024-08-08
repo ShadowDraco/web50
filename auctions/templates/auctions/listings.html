@@ -5,35 +5,53 @@
     {% csrf_token %}
     <button class="" type="submit">Watchlist</button>
   </form>
-  <div class="d-flex mt-5">
+  <div class="d-flex flex-wrap mt-5">
     <img
       src="{{listing.image}}"
       width="350px"
       height="350px"
       alt="Listing Image"
     />
+    {% if listing.active %}
+      <div class="mx-5 d-flex flex-column justfiy-content-around form-group">
+        <h3 class="text-primary">{{listing.title}}</h3>
 
-    <div class="mx-5 d-flex flex-column justfiy-content-around form-group">
-      <h3 class="text-primary">{{listing.title}}</h3>
+        <h5 class="flex-fill">Starting Price: $ {{listing.starting_bid}}</h5>
+        <h5 class="flex-fill">Current Bid: $ {{highest_bid}}</h5>
+        <h4 class="flex-fill my-3">{{listing.description}}</h4>
 
-      <h5 class="flex-fill">Starting Price: $ {{listing.starting_bid}}</h5>
-      <h5 class="flex-fill">Current Bid: $ {{highest_bid}}</h5>
-      <h4 class="flex-fill">{{listing.description}}</h4>
+        {% if user.is_authenticated %}
+        <div class="form-group">
+          <form action="/listings/{{listing.id}}" method="POST">
+              {% csrf_token %}
+              <label for="bid">{{bids}} bid(s) so far.</label>
+              <input type="number" name="bid" value={{highest_bid}} min={{highest_bid}} class="form-control">
+              <button type="submit" class="btn btn-primary my-2">BID!</button>
+              <label class="">{{message}}</label>
+          </form>
+        </div>
+        {% endif %}
+        <h4>Details: </h4>
+        {% if user.username == listing.lister.username %}
+        <div class="container ">
+          <h6>Listed By: <a href="/users/{{listing.lister.id}}">YOU</a></h6>
+          <h6 class="muted">Created: {{listing.date}}</h6>
 
-      {% if user.is_authenticated %}
-      <div class="container form-group">
-        <form action="/listings/{{listing.id}}" method="POST">
+          <h6>Top Bidder: {{top_bidder}} </h6>
+          <form action="/listings/{{listing.id}}/close" method="POST">
             {% csrf_token %}
-            <label for="bid">{{bids}} bid(s) so far.</label>
-            <input type="number" name="bid" value={{highest_bid}} min={{highest_bid}} class="form-control">
-            <button type="submit" class="btn btn-primary my-2">BID!</button>
-            <label class="">{{message}}</label>
-        </form>
-      </div>
+            <button type="submit" class="btn btn-success">Declare winner and close listing</button>
+          </form>
+        </div>
+        {% else %}
+          <h6>Listed By: <a href="/users/{{listing.lister.id}}">{{listing.lister}}</a></h6>
+          <h6 class="muted">Created: {{listing.date}}</h6>
+        {% endif %}
+
+      {% else %}
+        <h1>CLOSED</h1>
+        <h3>Winner: {{listing.winner.username}}</h1>
       {% endif %}
-      <h4>Details: </h4>
-      <h6>Listed By: <a href="/users/{{listing.lister.id}}">{{listing.lister}}</a></h6>
-      <h6 class="muted">Created: {{listing.date}}</h6>
     </div>
 
     

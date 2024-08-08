@@ -40,6 +40,28 @@ def listings(request, id):
     return render(request, "auctions/listings.html", listing_data)
 
 @login_required()
+def close_listing(request, id):
+    listing_data = getListingData(id)
+
+    if request.method == "POST" and request.user.is_authenticated:
+        try:
+            listing = listing_data["listing"]
+
+            if listing.lister == request.user:
+                listing.active = False
+                listing.closed = True
+                listing.winner = getTopBidder(listing_data["listing_bids"])
+                listing.save()
+
+                listing_data["message"] = "Successfully closed listing"
+            else:
+                listing_data["message"] = "You do not have permission to do that"
+        except:
+            listing_data["message"] = "There was an error closing the listing"
+
+        return render(request, "auctions/listings.html", listing_data)
+
+@login_required()
 def add_to_watchlist(request, id):
     
     listing_data = getListingData(id)
