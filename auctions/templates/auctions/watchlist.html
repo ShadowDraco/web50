@@ -1,47 +1,46 @@
-{% extends "auctions/layout.html" %}
-
+{% extends "auctions/layout.html" %} 
 {% block body %}
-    <h2>Watchlist</h2>
-    {% if watchlist %}
-    <ol class="list-group list-group-flush">
-        {% for listing in watchlist %}
-        <li class="list-group-item">
-          <div class="container d-flex">
-            <a
-              href="/listings/{{listing.id}}"
-              class="link-underline-opacity-0 link-underline-opacity-0-hover"
-            >
-              <img
-                src="{{listing.image}}"
-                width="350px"
-                height="350px"
-                alt="Listing Image"
-              />
-            </a>
-            <div class="mx-5 d-flex flex-column justfiy-content-around">
-              <a
-                href="/listings/{{listing.id}}"
-                class="link-underline-opacity-0 link-underline-opacity-0-hover"
-              >
-                <h3 class="text-primary">{{listing.title}}</h3>
-              </a>
-              <h5 class="flex-fill">Price: $ {{listing.starting_bid}}</h5>
-              <h4 class="flex-fill">{{listing.description}}</h4>
-              <div class="container d-flex justify-content-between">
-                <h6 class="muted">Created: {{listing.date}}</h6>
-                <form action="/watchlist/{{listing.id}}/remove" method="POST">
-                  {% csrf_token %}
-                  <button type='submit' class="btn btn-danger">X</button>
-                </form>
-              </div>
-              
-            </div>
-          </div>
-        </li>
-        {% endfor %}
-    {% else %}
-        <h1>There is nothing in your watchlist!</h1>
-        <h3><a href="/">Find something to watch!</a></h3>
-        <h3><a href="/login">Or login!</a></h3>
-    {% endif %}
-{% endblock %}
+<h2>Watchlist</h2>
+{% if watchlist %}
+<ol class="list-group list-group-flush">
+  {% for listing in watchlist %}
+  <li class="list-group-item">
+    <div class="container d-flex">
+      <a
+        href="/listings/{{listing.id}}"
+        class="link-underline-opacity-0 link-underline-opacity-0-hover"
+      >
+        <img
+          src="{{listing.image}}"
+          width="350px"
+          height="350px"
+          alt="Listing Image"
+        />
+      </a>
+      <div class="mx-5 d-flex flex-column justfiy-content-around">
+        <a
+          href="/listings/{{listing.id}}"
+          class="link-underline-opacity-0 link-underline-opacity-0-hover"
+        >
+          <h3 class="text-primary">{{listing.title}}</h3>
+        </a>
+        <h5 class="flex-fill">Price: $ {{listing.starting_bid}}</h5>
+        <h4 class="flex-fill">{{listing.description}}</h4>
+        <div class="container d-flex justify-content-between">
+          <h6 class="muted">Created: {{listing.date}}</h6>
+          <form action="/watchlist/{{listing.id}}/remove" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">X</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </li>
+  {% endfor %} 
+  {% else %}
+  <h1>There is nothing in your watchlist!</h1>
+  <h3><a href="/">Find something to watch!</a></h3>
+  <h3><a href="/login">Or login!</a></h3>
+  {% endif %} 
+  {% endblock %}
+</ol>

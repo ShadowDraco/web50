@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -21,7 +22,7 @@ def listings(request, id):
     listing_data = getListingData(id)
 
     # Check for form submission
-    if request.method == "POST" and request.user:
+    if request.method == "POST" and request.user.is_authenticated:
         # Do bid logic
         try:
             bid_amount = request.POST["bid"]
@@ -38,6 +39,7 @@ def listings(request, id):
    
     return render(request, "auctions/listings.html", listing_data)
 
+@login_required()
 def add_to_watchlist(request, id):
     
     listing_data = getListingData(id)
@@ -52,6 +54,7 @@ def add_to_watchlist(request, id):
 
     return render(request, "auctions/listings.html", listing_data)
 
+@login_required()
 def remove_from_watchlist(request, id):
     listing_data = getListingData(id)
     watchlist_data = []
@@ -68,6 +71,7 @@ def remove_from_watchlist(request, id):
 
     return render(request, "auctions/watchlist.html", { "watchlist": watchlist_data, "message": message })
 
+@login_required()
 def create_listing(request):
 
     form = ListingForm(request.POST)
@@ -106,6 +110,7 @@ def create_listing(request):
         "categories": categories, "message": ""
     })
 
+@login_required()
 def watchlist(request):
     user_watchlist = getUserWatchlist(request.user)
     
