@@ -1,5 +1,52 @@
-{% extends "auctions/layout.html" %} 
-{% block body %}
-<h2>Sort by Category</h2>
+{% extends "auctions/layout.html" %} {% block body %}
+<h2>Sort By Category:</h2>
 
+<div class="container d-flex flex-wrap justify-content-evenly">
+    {% for category in categories %}
+        <div class="p-2 m-2"> 
+            <a href="/categories/{{category.id}}">
+                <h5 class="font-size-lg">
+                    {{category.title}}
+                </h5>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+{% if filtered %}
+<ol class="list-group list-group-flush">
+  {% for listing in filtered %}
+  <li class="list-group-item">
+    <div class="container d-flex">
+      <a
+        href="/listings/{{listing.id}}"
+        class="link-underline-opacity-0 link-underline-opacity-0-hover"
+      >
+        <img
+          src="{{listing.image}}"
+          width="350px"
+          height="350px"
+          alt="Listing Image"
+        />
+      </a>
+      <div class="mx-5 d-flex flex-column justfiy-content-around">
+        <a
+          href="/listings/{{listing.id}}"
+          class="link-underline-opacity-0 link-underline-opacity-0-hover"
+        >
+          <h3 class="text-primary">{{listing.title}}</h3>
+        </a>
+        <h5 class="flex-fill">Price: $ {{listing.starting_bid}}</h5>
+        <h4 class="flex-fill">{{listing.description}}</h4>
+        <h6 class="muted">Created: {{listing.date}}</h6>
+      </div>
+    </div>
+  </li>
+  {% endfor %}
+</ol>
+{% else %}
+
+<h3>Please select a category! </h1>
+
+{% endif %} 
 {% endblock %}

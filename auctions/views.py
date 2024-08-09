@@ -164,8 +164,19 @@ def watchlist(request):
         "watchlist": user_watchlist
     })
 
-def categories(request):
-    return render(request, "auctions/categories.html")
+def categories(request, id=None):
+    categories = getAllCategories()
+    filtered = []
+   
+    category_data = { "categories": categories, "filtered": filtered, "message": ""}
+    if id:
+        try: 
+            category = Category.objects.get(id=id)
+            category_data["filtered"] = Listing.objects.filter(category=category, closed=False)
+        except:
+            category_data["message"] = "That category does not exist, or something else went wrong"
+
+    return render(request, "auctions/categories.html", category_data)
 
 def login_view(request):
     if request.method == "POST":
