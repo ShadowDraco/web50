@@ -23,24 +23,23 @@ def listings(request, id):
 
     # Check for form submission
     if request.method == "POST" and request.user.is_authenticated:
-        # Do bid logic
-
-      if listing_data["lister"] == request.user:
+    # Do bid logic
+      if listing_data["listing"].lister == request.user:
         listing_data["message"] = "You cannot bid on your own listing!"
         return render(request, "auctions/listings.html", listing_data)
 
-        try:
-            bid_amount = request.POST["bid"]
-            amount = float(bid_amount)
-            if amount > listing_data["highest_bid"]:
-                newBid = Bid(amount=amount, bidder=request.user, listing=listing_data["listing"])
-                newBid.save()
-                listing_data = getListingData(id)
-                listing_data["message"] = "Success!" 
-            else:
-                listing_data["message"] = "Bid too low!" 
-        except ValueError:
-                listing_data["message"] = f"Bid could not be completed {ValueError}" 
+    try:
+        bid_amount = request.POST["bid"]
+        amount = float(bid_amount)
+        if amount > listing_data["highest_bid"]:
+            newBid = Bid(amount=amount, bidder=request.user, listing=listing_data["listing"])
+            newBid.save()
+            listing_data = getListingData(id)
+            listing_data["message"] = "Success!" 
+        else:
+            listing_data["message"] = "Bid too low!" 
+    except ValueError:
+            listing_data["message"] = f"Bid could not be completed {ValueError}" 
    
     return render(request, "auctions/listings.html", listing_data)
 
