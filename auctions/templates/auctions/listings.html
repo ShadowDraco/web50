@@ -2,6 +2,7 @@
 {% if listing.active %}
 <h2>Listing: {{listing.title}}</h2>
 <div class="">
+  <!-- WATCHLIST BUTTON -->
   <form action="/watchlist/{{listing.id}}" method="POST">
     {% csrf_token %}
     <button class="" type="submit">Watchlist</button>
@@ -13,7 +14,7 @@
       height="350px"
       alt="Listing Image"
     />
-   
+      <!-- LISTING DATA -->
       <div class="mx-5 d-flex flex-column justfiy-content-around form-group">
         <h3 class="text-primary">{{listing.title}}</h3>
 
@@ -32,6 +33,7 @@
           </form>
         </div>
         {% endif %}
+        <!-- EXTRA LISTER DETAILS -->
         <h4>Details: </h4>
         {% if user.username == listing.lister.username %}
         <div class="container ">
@@ -45,11 +47,35 @@
           </form>
         </div>
         {% else %}
+        <!-- EXTRA DETAILS -->
           <h6>Listed By: <a href="/user/{{listing.lister.id}}">{{listing.lister}}</a></h6>
           <h6 class="muted">Created: {{listing.date}}</h6>
         {% endif %}
+  
+      <!-- COMMENTS SECTION -->
+
+      <div class="container p-3">
+        <div class="">
+          <h3>Comments</h3>
+        </div>
+        
+        <ul class="list-group-flush" style="max-height: 9em; overflow-y: scroll;">
+          {% for comment in comments %} 
+            <li class="list-group-item">
+              <div>
+                <h5>{{comment.commenter.username}}</h4>
+                <p>{{comment.comment}}</p>
+              </div>
+            </li>
+          {% endfor %} 
+
+        </ul>  
+        
+      </div>
+
 
       {% else %}
+      <!-- EXTRA WINNER DETAILS -->
         {% if listing.winner == user or listing.lister == user %}
           <div class="mx-5">
             <h1>{{listing.title}} ** CLOSED **</h1>
@@ -62,6 +88,7 @@
             <h1 class="text-success">Winner: {{listing.winner.username}}</h1>
           </div>
         {% else %}
+        <!-- LISTING NOT FOUND -->
           <h1>Listing does not exist</h1>
           <h3><a href="/">Please return to the active listings</a></h3>
         {% endif %}
@@ -73,7 +100,7 @@
 </div>
 
 {% else %}
-
+    <!-- LISTING NOT FOUND AND OR CLOSED -->
 <h1>That listing does not exist!</h1>
 <h3><a href="/">Return to listings</a></h3>
 

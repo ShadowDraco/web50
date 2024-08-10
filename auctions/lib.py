@@ -1,4 +1,4 @@
-from .models import User, Listing, Bid, Category
+from .models import User, Listing, Bid, Category, Comment
 from django import forms
 
 class ListingForm(forms.Form):
@@ -40,6 +40,7 @@ def getListingData(listing_id):
         listing = Listing.objects.get(id=listing_id)    
         listing_bids = Bid.objects.filter(listing=listing).order_by("-amount").values()
         top_bidder = getTopBidder(listing_bids, True)
+        comments = Comment.objects.filter(listing=listing)
 
         if listing_bids.first():
             highest_bid = listing_bids.first()["amount"]
@@ -53,6 +54,7 @@ def getListingData(listing_id):
         "highest_bid": highest_bid,
         "listing_bids": listing_bids,
         "top_bidder": top_bidder, 
+        "comments": comments,
         "message": "" }
 
 def getTopBidder(listing_bids, username=False):
