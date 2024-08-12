@@ -59,19 +59,29 @@
           <h3>Comments</h3>
         </div>
         
-        <ul class="list-group-flush" style="max-height: 9em; overflow-y: scroll;">
+        <ul class="list-group-flush border" style="max-height: 9em; overflow-y: scroll;">
           {% for comment in comments %} 
             <li class="list-group-item">
               <div>
-                <h5>{{comment.commenter.username}}</h4>
+                <h5>{{comment.commenter.username}}:</h4>
                 <p>{{comment.comment}}</p>
               </div>
             </li>
-          {% endfor %} 
-
+          {% endfor %}
         </ul>  
-        
+        {% if user.is_authenticated %}
+        <div>
+          <form action="/listings/{{listing.id}}/comment" method="POST" class="form">
+            {% csrf_token %}
+            <label for="comment">Comment:</label>
+            <input type="text" name="comment" placeholder="I loved this!" class="form-control">
+            <br>
+            <button type="submit" class="btn btn-primary">Comment!</button>
+            <label>{{message}}</label>
+          </form>
+        </div>
       </div>
+      {% endif %}
 
 
       {% else %}

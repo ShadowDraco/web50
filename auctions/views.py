@@ -44,6 +44,22 @@ def listings(request, id):
     return render(request, "auctions/listings.html", listing_data)
 
 @login_required()
+def post_comment(request, id):
+
+    try:
+        listing = Listing.objects.get(id=id)
+
+        comment = Comment(commenter=request.user, comment=request.POST["comment"], listing=listing)
+        comment.save()
+        listing_data = getListingData(id)
+        listing_data["message"] = "Commented Successfully"
+        return render(request, "auctions/listings.html", listing_data)
+
+    except:
+        listing_data = getListingData(id)
+        listing_data["message"] = "There was an error posting that comment"
+
+@login_required()
 def user(request, id):
     try:
         user = User.objects.get(id=id)

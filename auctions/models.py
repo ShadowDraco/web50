@@ -38,7 +38,7 @@ class Bid(models.Model):
 
 class Comment(models.Model):
     commenter = models.ForeignKey(User, related_name="comments", on_delete=models.CASCADE,)
-    comment = models.TextField(max_length=150)
+    comment = models.CharField(max_length=150)
     listing = models.ForeignKey(Listing, verbose_name="Listing the comment was placed on", on_delete=models.CASCADE)
     
     def __str__(self):
