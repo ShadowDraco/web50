@@ -4,8 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="./script.js" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector('form').onsubmit = (event) => {
+                event.preventDefault()    
+                const name = document.querySelector("#alert-name")
+                const h1UserName = document.querySelector("#user-name")
+                if (name.value != ''){
+                    h1UserName.innerText = `Name: ${name.value}` 
+                } else {
+                    h1UserName.innerText = ''
+                }
+            }
+        })
+    </script>
 </head>
 <body>
-    
+    <h1 id="h1-click-count"></h1>
+    <form method="POST" action="/">
+        <input id="alert-name" type="text" name="name" placeholder="your name" autocomplete="off" autofocus>
+        <button type="submit">Click Me</button>
+    </form>
+    <h1 id="user-name"></h1>
+  
 </body>
 </html>
