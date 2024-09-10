@@ -39,17 +39,38 @@ export const getArchivedEmails = async () => {
 }
 
 export const inspectEmail = async emailId => {
+  // Show email view and hide other views
+  document.querySelector('#emails-view').style.display = 'none'
+  document.querySelector('#email-view').style.display = 'block'
+  document.querySelector('#compose-view').style.display = 'none'
+
   const response = await fetch(`http://127.0.0.1:8000/emails/${emailId}`)
   const email = await response.json()
-  console.log('Inspected: ', email)
+
+  const from = document.querySelector('#from')
+  const to = document.querySelector('#to')
+  const subject = document.querySelector('#subject')
+  const timestamp = document.querySelector('#timestamp')
+  const body = document.querySelector('#body')
+
+  from.innerHTML = email.sender
+  const recipients = ''
+  email.recipients.map(recipient => {
+    recipients = recipients + `, ${recipient}`
+  })
+  to.innerHTML = recipients
+  subject.innerHTML = email.subject
+  timestamp.innerHTML = email.timestamp
+  body.innerHTML = email.body
 }
 
 export const populateEmailList = async getEmailFunction => {
+  // Get Emails
   const emails = await getEmailFunction()
-
   const emailList = document.querySelector('#email-list')
   emailList.innerHTML = ''
 
+  // Add Emails to page
   emails.forEach(email => {
     const liEl = document.createElement('li')
     liEl.addEventListener('click', () => {
