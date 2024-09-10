@@ -1,3 +1,31 @@
 textarea {
-    min-height: 400px;
+  min-height: 400px;
+}
+
+#email-list li {
+  border: 1px rgb(133, 132, 132) solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  margin-bottom: 3px;
+  transition: all 0.7s;
+}
+
+#email-list li:hover {
+  cursor: pointer;
+  border: 1px black solid;
+  background-color: rgb(211, 211, 211);
+  transition: all 0.5s;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.timestamp {
+  color: gray;
 }

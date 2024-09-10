@@ -1,4 +1,10 @@
-import { sendEmail, getSentEmails, getInbox, getArchivedEmails } from './lib.js'
+import {
+  sendEmail,
+  getSentEmails,
+  getInboxEmails,
+  getArchivedEmails,
+  populateEmailList,
+} from './lib.js'
 
 document.addEventListener('DOMContentLoaded', function () {
   // Use buttons to toggle between views
@@ -36,17 +42,22 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none'
 
   // Show the mailbox name
-  document.querySelector('#emails-view').innerHTML = `<h3>${
+  document.querySelector('#mailbox-title').innerHTML = `<h3>${
     mailbox.charAt(0).toUpperCase() + mailbox.slice(1)
   }</h3>`
 
   // get the selected mailbox
   switch (mailbox) {
+    case 'inbox':
+      populateEmailList(getInboxEmails)
+      break
     case 'sent':
-      getSentEmails()
+      populateEmailList(getSentEmails)
+      break
     case 'archive':
-      getArchivedEmails()
+      populateEmailList(getArchivedEmails)
+      break
     default:
-      getInbox()
+      break
   }
 }
