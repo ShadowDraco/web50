@@ -41,11 +41,23 @@ export const getArchivedEmails = async () => {
 export const inspectEmail = async emailId => {
   // Show email view and hide other views
   document.querySelector('#emails-view').style.display = 'none'
-  document.querySelector('#email-view').style.display = 'block'
   document.querySelector('#compose-view').style.display = 'none'
+  document.querySelector('#email-view').style.display = 'block'
 
+  // get email
   const response = await fetch(`http://127.0.0.1:8000/emails/${emailId}`)
   const email = await response.json()
+
+  // set up email view
+  document.querySelector('#reply').addEventListener('click', () => {
+    replyToEmail(email)
+  })
+  document.querySelector('#archive').addEventListener('click', () => {
+    archiveEmail(email)
+  })
+  document.querySelector('#de-archive').addEventListener('click', () => {
+    deArchiveEmail(email)
+  })
 
   const from = document.querySelector('#from')
   const to = document.querySelector('#to')
@@ -53,15 +65,71 @@ export const inspectEmail = async emailId => {
   const timestamp = document.querySelector('#timestamp')
   const body = document.querySelector('#body')
 
+  // populate email view
   from.innerHTML = email.sender
-  const recipients = ''
-  email.recipients.map(recipient => {
-    recipients = recipients + `, ${recipient}`
+  let recipients = ''
+  email.recipients.map((recipient, index) => {
+    if (index == 0) {
+      recipients = recipient
+    } else {
+      recipients = recipients + `, ${recipient}`
+    }
   })
   to.innerHTML = recipients
   subject.innerHTML = email.subject
   timestamp.innerHTML = email.timestamp
   body.innerHTML = email.body
+
+  !email.read &&
+    fetch(`http://127.0.0.1:8000/emails/${emailId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ read: true }),
+    })
+}
+
+export const replyToEmail = email => {
+  document.querySelector('#emails-view').style.display = 'none'
+  document.querySelector('#email-view').style.display = 'none'
+  document.querySelector('#compose-view').style.display = 'block'
+
+  document.querySelector('#compose-recipients').value = email.recipients
+  document.querySelector('#compose-recipients').disabled = true
+  document.querySelector('#compose-subject').value = `Re: ${email.subject}`
+  document.querySelector('#compose-subject').disabled = true
+
+  document.querySelector(
+    '#compose-body'
+  ).value = `On ${email.timestamp} ${email.sender} wrote: ${email.body}`
+}
+
+export const archiveEmail = email => {
+  try {
+    !email.archived &&
+      fetch(`http://127.0.0.1:8000/emails/${email.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ archived: true }),
+      })
+    document.querySelector('#response').innerHTML = 'Archived~!'
+  } catch (error) {
+    console.error('error archiving email: ', error)
+    document.querySelector('#response').innerHTML =
+      'Error, please try again later!'
+  }
+}
+
+export const deArchiveEmail = email => {
+  try {
+    email.archived &&
+      fetch(`http://127.0.0.1:8000/emails/${email.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ archived: false }),
+      })
+    document.querySelector('#response').innerHTML = 'DE-Archived~!'
+  } catch (error) {
+    console.error('error archiving email: ', error)
+    document.querySelector('#response').innerHTML =
+      'Error, please try again later!'
+  }
 }
 
 export const populateEmailList = async getEmailFunction => {
@@ -69,6 +137,7 @@ export const populateEmailList = async getEmailFunction => {
   const emails = await getEmailFunction()
   const emailList = document.querySelector('#email-list')
   emailList.innerHTML = ''
+  document.querySelector('#response').innerHTML = ''
 
   // Add Emails to page
   emails.forEach(email => {
@@ -76,6 +145,9 @@ export const populateEmailList = async getEmailFunction => {
     liEl.addEventListener('click', () => {
       inspectEmail(email.id)
     })
+    if (email.read) {
+      liEl.className = 'read'
+    }
     liEl.innerHTML = `
     <div class="title">
         <p class="sender">

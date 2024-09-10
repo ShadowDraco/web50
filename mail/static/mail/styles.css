@@ -7,7 +7,7 @@ textarea {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px;
+  padding: 0.5em;
   margin-bottom: 3px;
   transition: all 0.7s;
 }
@@ -23,9 +23,38 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 1em;
 }
 
 .timestamp {
   color: gray;
+}
+
+#email-body {
+  border-top: 1px gray solid;
+  margin-top: 1em;
+  padding: 1em;
+}
+
+.email-detail {
+  display: flex;
+}
+
+#email-buttons {
+  display: flex;
+  gap: 1em;
+}
+
+#reply {
+  border: 2px rgb(60, 60, 253) solid;
+  color: rgb(60, 60, 253);
+}
+
+#archive {
+  border: 2px rgb(252, 72, 72) solid;
+  color: rgb(252, 72, 72);
+}
+
+.read {
+  background-color: rgb(231, 231, 231);
 }

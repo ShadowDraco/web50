@@ -52,12 +52,18 @@ function load_mailbox(mailbox) {
   switch (mailbox) {
     case 'inbox':
       populateEmailList(getInboxEmails)
+      document.querySelector('#archive').style.display = 'block'
+      document.querySelector('#de-archive').style.display = 'none'
       break
     case 'sent':
       populateEmailList(getSentEmails)
+      document.querySelector('#archive').style.display = 'none'
+      document.querySelector('#de-archive').style.display = 'none'
       break
     case 'archive':
       populateEmailList(getArchivedEmails)
+      document.querySelector('#archive').style.display = 'none'
+      document.querySelector('#de-archive').style.display = 'block'
       break
     default:
       break
