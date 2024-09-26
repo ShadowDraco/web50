@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -10,6 +10,21 @@ from .models import User
 def index(request):
     return render(request, "network/index.html")
 
+def getAllUsers(request):
+    users = list(User.objects.all().values('username', 'id'))
+    return JsonResponse({'users': users[0]})
+
+def getAllPosts(request):
+    pass
+
+def getProfile(request, id):
+    pass
+
+def likePost(request, id):
+    pass
+
+def unlikePost(request, id):
+    pass
 
 def login_view(request):
     if request.method == "POST":

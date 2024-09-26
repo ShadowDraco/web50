@@ -1,5 +1,10 @@
 let currentPage = 'allPostsPage'
 
+const getUsers = async () => {
+  const response = await fetch('/users', { method: 'GET' })
+  const users = await response.json()
+}
+
 const setCurrentPage = page => {
   currentPage = page
   console.log(page)
