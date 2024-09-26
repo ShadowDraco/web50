@@ -5,35 +5,64 @@ const getUsers = async () => {
   const users = await response.json()
 }
 
-const likeOrUnlikePost = async (user, postID) => {
-  console.log(user, postID)
-}
-
 const getPosts = async () => {
   const response = await fetch('/posts', { method: 'GET' })
   const posts = await response.json()
-
+  console.log(posts)
   const postList = document.querySelector('#postList')
+  postList.innerHTML = ''
 
   posts.posts.forEach(post => {
-    console.log(post)
     const listItem = document.createElement('li')
 
     listItem.classList = 'list-group-item post p-3'
-
     listItem.innerHTML = `
     <h3>${post.poster_name}</h3>
     <br>
-    <button class="button btn-primary">Edit</button>
+    <button class="button btn-primary" ${
+      post.posted_by_id == posts.user ? '' : 'hidden'
+    }>Edit</button>
     <p class="">${post.content}</p>
     <p class="text-muted">${post.date}</p>
-    <p id='likeButton' onclick="likeOrUnlikePost(${posts.user}, ${post.id})">${
-      post?.liked_by?.includes(posts.user) ? '❤️' : '🖤'
-    } ${post.liked_by ? len(post.liked_by) : '0'}</p>
+    <p id='likeButton' onclick="${
+      post?.liked_by_id.length > 0 && post?.liked_by_id?.includes(posts.user)
+        ? 'unlikePost'
+        : 'likePost'
+    }(${post.id})">${
+      (post?.liked_by_id.length > 0 &&
+        post?.liked_by_id?.includes(posts.user)) ||
+      post?.liked_by_id == posts.user
+        ? '❤️'
+        : '🖤'
+    } ${post.liked_by_id.length || '0'}</p>
     <button class="button btn-dark">comment</button>
     `
     postList.appendChild(listItem)
   })
+}
+
+const likePost = async postId => {
+  const csrfTokenInput = document.querySelector(
+    'input[name="csrfmiddlewaretoken"]'
+  )
+  const csrfToken = csrfTokenInput.value
+  const response = await fetch(`/post/${postId}/like`, {
+    method: 'PUT',
+    headers: { 'X-CSRFToken': csrfToken },
+  })
+  getPosts()
+}
+
+const unlikePost = async postId => {
+  const csrfTokenInput = document.querySelector(
+    'input[name="csrfmiddlewaretoken"]'
+  )
+  const csrfToken = csrfTokenInput.value
+  const response = await fetch(`/post/${postId}/unlike`, {
+    method: 'PUT',
+    headers: { 'X-CSRFToken': csrfToken },
+  })
+  getPosts()
 }
 
 const createPost = async event => {

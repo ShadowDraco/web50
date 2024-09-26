@@ -20,10 +20,28 @@ def users(request):
             return JsonResponse({'error': 'There was an error with your request'})
     except: 
         return JsonResponse({'error': 'There was an error with your request'})
+    
+def post(request, id, action):
+    try: 
+        if request.method == 'PUT':
+            post = Post.objects.filter(id=id)
+            print(action)
+            if action == 'like':
+                post.update(liked_by=request.user)
+
+            elif action == 'unlike':
+                post.update(liked_by=not request.user)
+            
+            else: 
+                return JsonResponse({'error': 'That is not a valid action'})
+            
+            post.save()
+    except: 
+        return JsonResponse({'error': 'There was an error liking or un-liking this post'})
 
 def posts(request, id = None):
 
-    #try: 
+    try: 
         if request.method == 'GET' and id:
             post = Post.objects.filter({id: id})
             return JsonResponse({'post': post, "user": request.user.id})
@@ -46,8 +64,8 @@ def posts(request, id = None):
             return JsonResponse({ "status": 200})
         else: 
             return JsonResponse({'error': 'That type of request does not work.'})
-    #except: 
-       #return JsonResponse({'error': 'There was an error with your request'})
+    except: 
+       return JsonResponse({'error': 'There was an error with your request'})
 
 
 def login_view(request):
