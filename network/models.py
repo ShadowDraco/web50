@@ -3,9 +3,8 @@ from django.db import models
 
 
 class User(AbstractUser):
-    posts = models.ForeignKey("Post", on_delete=models.CASCADE, null=True)
-    watching = models.ForeignKey("User", on_delete=models.CASCADE, related_name="following",  null=True)
-    liked_posts = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="likes", null=True)
+    watching = models.ManyToManyField("User", related_name="following")
+    liked_posts = models.ManyToManyField("Post", related_name='likes')
     
     def getFollowingCount (self):
         return len(self.watching)

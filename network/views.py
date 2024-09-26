@@ -21,33 +21,30 @@ def users(request):
     except: 
         return JsonResponse({'error': 'There was an error with your request'})
     
-def post(request, id, action):
-    try: 
+def post(request, id):
+   
+    #try:
         if request.method == 'PUT':
-            post = Post.objects.filter(id=id)
-            print(action)
-            if action == 'like':
-                post.update(liked_by=request.user)
+            post = Post.objects.filter(id=id).first()
+            user = User.objects.filter(id=request.user.id).first()
+            user.liked_posts.add(post)
+            user.save()
+        else: 
+            return JsonResponse({'error': 'That is not a valid action'})
 
-            elif action == 'unlike':
-                post.update(liked_by=not request.user)
-            
-            else: 
-                return JsonResponse({'error': 'That is not a valid action'})
-            
-            post.save()
-    except: 
-        return JsonResponse({'error': 'There was an error liking or un-liking this post'})
+        return JsonResponse({'status': 200})
+    #except: 
+     #   return JsonResponse({'error': 'There was an error liking or un-liking this post'})
 
 def posts(request, id = None):
 
     try: 
         if request.method == 'GET' and id:
-            post = Post.objects.filter({id: id})
+            post = Post.objects.filter({id: id}).values("id", "content", "likes", "poster_name", "posted_by", "date")
             return JsonResponse({'post': post, "user": request.user.id})
         
         elif request.method == 'GET':
-            posts = list(Post.objects.all().values())
+            posts = list(Post.objects.all().values("id", "content", "likes", "poster_name", "posted_by", "date"))
             return JsonResponse({'posts': posts, "user": request.user.id})
         
         elif request.method == 'POST':

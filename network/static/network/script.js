@@ -8,61 +8,63 @@ const getUsers = async () => {
 const getPosts = async () => {
   const response = await fetch('/posts', { method: 'GET' })
   const posts = await response.json()
-  console.log(posts)
-  const postList = document.querySelector('#postList')
-  postList.innerHTML = ''
+  print(posts)
+  if (posts.error) {
+    document.querySelector('#error').innerHTML = newPost.error
+  } else {
+    // no error, get all new posts and put them on the page
+    document.querySelector('#error').innerHTML = ''
 
-  posts.posts.forEach(post => {
-    const listItem = document.createElement('li')
+    const postList = document.querySelector('#postList')
+    postList.innerHTML = ''
 
-    listItem.classList = 'list-group-item post p-3'
-    listItem.innerHTML = `
+    posts.posts.forEach(post => {
+      const listItem = document.createElement('li')
+      const postDate = new Date(post.date).toLocaleDateString()
+      listItem.classList = 'list-group-item post p-3'
+      listItem.innerHTML = `
     <h3>${post.poster_name}</h3>
-    <br>
     <button class="button btn-primary" ${
-      post.posted_by_id == posts.user ? '' : 'hidden'
+      post.posted_by == posts.user ? '' : 'hidden'
     }>Edit</button>
-    <p class="">${post.content}</p>
-    <p class="text-muted">${post.date}</p>
-    <p id='likeButton' onclick="${
-      post?.liked_by_id.length > 0 && post?.liked_by_id?.includes(posts.user)
-        ? 'unlikePost'
-        : 'likePost'
-    }(${post.id})">${
-      (post?.liked_by_id.length > 0 &&
-        post?.liked_by_id?.includes(posts.user)) ||
-      post?.liked_by_id == posts.user
-        ? '❤️'
-        : '🖤'
-    } ${post.liked_by_id.length || '0'}</p>
+    <p class="pt-2">${post.content}</p>
+    <p class="text-muted">${postDate}</p>
+    <p id='likeButton'
+      onclick="likeOrUnlikePost(${post.id})"
+    > 
+    ${
+      post.likes.length
+        ? post.likes.includes(posts.user)
+          ? `❤️ ${post.likes.length}`
+          : `🖤 ${post.likes.length}`
+        : '🖤 0'
+    }
+    </p>
     <button class="button btn-dark">comment</button>
     `
-    postList.appendChild(listItem)
-  })
+      postList.appendChild(listItem)
+    })
+  }
 }
 
-const likePost = async postId => {
+const likeOrUnlikePost = async postId => {
   const csrfTokenInput = document.querySelector(
     'input[name="csrfmiddlewaretoken"]'
   )
   const csrfToken = csrfTokenInput.value
-  const response = await fetch(`/post/${postId}/like`, {
+  const response = await fetch(`/post/${postId}`, {
     method: 'PUT',
     headers: { 'X-CSRFToken': csrfToken },
   })
-  getPosts()
-}
+  const data = await response.json()
 
-const unlikePost = async postId => {
-  const csrfTokenInput = document.querySelector(
-    'input[name="csrfmiddlewaretoken"]'
-  )
-  const csrfToken = csrfTokenInput.value
-  const response = await fetch(`/post/${postId}/unlike`, {
-    method: 'PUT',
-    headers: { 'X-CSRFToken': csrfToken },
-  })
-  getPosts()
+  if (data.error) {
+    document.querySelector('#error').innerHTML = data.error
+  } else {
+    // no error, get all new posts and put them on the page
+    document.querySelector('#error').innerHTML = ''
+    getPosts()
+  }
 }
 
 const createPost = async event => {
