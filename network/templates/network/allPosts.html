@@ -1,3 +1,20 @@
 <div id="allPostsPage">
   <h1>All Posts</h1>
+
+  <div class="border border-gray p-5">
+    <h3>New Post</h3>
+
+    <form id="newPostForm" class="form-floating">
+      {% csrf_token %}
+      <textarea id="postContent" class="form-control"></textarea>
+      <div class="d-flex align-items-center pt-3 pb-3 pr-3">
+        <button type="submit" class="button btn-primary">Post</button>
+        <p id="error" class="text-danger ml-5"></p>
+      </div>
+    </form>
+  </div>
+
+  <div class="border border-gray p-5">
+    <ul id="postList" class="list-group"></ul>
+  </div>
 </div>

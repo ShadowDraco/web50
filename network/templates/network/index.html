@@ -1,7 +1,10 @@
 {% extends 'network/layout.html' %}
 
 {% block body %}
-  {% include 'network/allposts.html' %}
-  {% include 'network/following.html' %}
-  {% include 'network/profile.html' %}
+  <div class="p-3">
+    {% include 'network/allposts.html' %}
+    {% include 'network/following.html' %}
+    {% include 'network/profile.html' %}
+    {{ message }}
+  </div>
 {% endblock %}

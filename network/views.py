@@ -1,30 +1,54 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post
 
 
 def index(request):
     return render(request, "network/index.html")
 
-def getAllUsers(request):
-    users = list(User.objects.all().values('username', 'id'))
-    return JsonResponse({'users': users[0]})
+def users(request):
+    try: 
+        if request.method == 'GET':
+            users = list(User.objects.all().values('username', 'id'))
+            return JsonResponse({'users': users[0]})
+        else: 
+            return JsonResponse({'error': 'There was an error with your request'})
+    except: 
+        return JsonResponse({'error': 'There was an error with your request'})
 
-def getAllPosts(request):
-    pass
+def posts(request, id = None):
 
-def getProfile(request, id):
-    pass
+    #try: 
+        if request.method == 'GET' and id:
+            post = Post.objects.filter({id: id})
+            return JsonResponse({'post': post, "user": request.user.id})
+        
+        elif request.method == 'GET':
+            posts = list(Post.objects.all().values())
+            return JsonResponse({'posts': posts, "user": request.user.id})
+        
+        elif request.method == 'POST':
+            # set post data
+            user = request.user
+            content = json.loads(request.body)["content"]
+            # create new post
+            newPost = Post.objects.create(posted_by=user, poster_name=user.username, content=content)
+            return JsonResponse({ "status": 200, "user": request.user.id})
 
-def likePost(request, id):
-    pass
+        elif request.method == 'PUT' and id:
+            newContent = request.POST['content']
+            Post.objects.update({id: id}, {content: newContent})
+            return JsonResponse({ "status": 200})
+        else: 
+            return JsonResponse({'error': 'That type of request does not work.'})
+    #except: 
+       #return JsonResponse({'error': 'There was an error with your request'})
 
-def unlikePost(request, id):
-    pass
 
 def login_view(request):
     if request.method == "POST":

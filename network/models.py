@@ -11,6 +11,7 @@ class User(AbstractUser):
 
 class Post(models.Model):
     posted_by = models.ForeignKey("User", on_delete=models.CASCADE, related_name="poster", null=True)
+    poster_name = models.TextField(blank=False, null=False)
     liked_by = models.ForeignKey("User", on_delete=models.CASCADE, related_name="likes", null=True)
     date = models.DateTimeField(auto_now=True)
     content = models.TextField(blank=True)
