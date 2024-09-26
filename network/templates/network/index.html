@@ -1,5 +1,7 @@
-{% extends "network/layout.html" %}
+{% extends 'network/layout.html' %}
 
 {% block body %}
-    TODO
+  {% include 'network/allposts.html' %}
+  {% include 'network/following.html' %}
+  {% include 'network/profile.html' %}
 {% endblock %}
